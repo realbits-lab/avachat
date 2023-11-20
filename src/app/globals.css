@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "SCoreDream";
+  font-weight: 300;
+  font-style: normal;
+  src: url(https://public.dev.dxr.kr/font/SCoreDream/SCoreDream3.woff2)
+      format("woff2"),
+    url(https://public.dev.dxr.kr/font/SCoreDream/SCoreDream3.woff)
+      format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SCoreDreamBold";
+  font-weight: 500;
+  font-style: normal;
+  src: url(https://public.dev.dxr.kr/font/SCoreDream/SCoreDream5.woff2)
+      format("woff2"),
+    url(https://public.dev.dxr.kr/font/SCoreDream/SCoreDream5.woff)
+      format("woff");
+  font-display: swap;
+}
+
+body {
+  font-family: SCoreDream, sans-serif;
+}
+
+.sc-bold {
+  font-family: SCoreDreamBold, sans-serif;
+}
