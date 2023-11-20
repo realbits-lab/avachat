@@ -1,0 +1,8 @@
+.vscode
+.env.development
+.gitignore
+.editorconfig
+.next
+*.marker
+*.local
+node_modules

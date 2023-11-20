@@ -1,0 +1,178 @@
+$header_height: 80px
+$aside_width: 88px
+
+div.chat
+  header
+    width: 100%
+    height: $header_height
+    border-bottom: 2px solid #d9d9d9
+    position: relative
+    z-index: 10
+
+  aside
+    position: absolute
+    left: 0
+    top: $header_height
+    width: $aside_width
+    bottom: 0
+    padding: 20px 0
+    button
+      //display: inline-block
+      width: 48px
+      height: 48px
+      margin: 4px auto
+      border-radius: 8px
+      border: 1.5px solid #d9d9d9
+      color: #d9d9d9
+      svg
+        margin: 0 auto
+    label
+      display: block
+      font-size: 10px
+      margin-bottom: 14px
+      color: #d9d9d9
+    a
+      &.active
+        cursor: pointer
+        button
+          border-color: #6D71F9
+          background-color: #6D71F9
+          color: white
+        label
+          cursor: pointer
+          color: black
+      &.disabled
+        cursor: not-allowed
+        button, label
+          cursor: not-allowed
+
+  main
+    position: absolute
+    top: $header_height
+    left: $aside_width
+    right: 0
+    bottom: 0
+    background-color: #F7F7F7
+    > div
+      background-color: #F7F7F7
+    h1
+      font-size: 20px
+      font-weight: bold
+      margin: 12px 0
+    // avatar name
+    .name
+      font-size: 16px
+      font-family: SCoreDreamBold
+      text-align: center
+      padding-top: 8px
+    .more_chat
+      width: 160px
+      svg
+        margin: 0 auto
+
+    .recmd
+      b
+        font-size: 14px
+        padding-left: 8px
+
+      &.FREE
+        background-color: #F0F1FF
+        b
+          color: #6D71F9
+
+      &.NFT
+        background-color: #DBF2FD
+        b
+          color: #FA6262
+
+      .desc
+        font-size: 14px
+        margin: 12px 0
+      .maker
+        font-size: 12px
+        margin-bottom: 8px
+        svg
+          display: inline
+          margin-right: 4px
+
+$msgBorderRadius: 10px
+$colorYu: #DBF2FD
+$colorMe: #e3e4e6
+
+div.talk
+  border-left: 1px solid #d9d9d9
+  height: 100%
+  .head
+    height: 80px
+    width: 100%
+    border-bottom: 2px solid #d9d9d9
+    position: relative
+    z-index: 10
+
+  .input-area
+    border-top: 1px solid #d9d9d9
+
+  .hst
+    margin: 12px 0
+    .yu
+      text-align: left
+      .body
+        margin-left: 6px
+      .nick
+        font-size: 20px
+        margin: 4px 0
+      .msg
+        border-radius: $msgBorderRadius
+        border-top-left-radius: 0
+      .arw
+        width: 0
+        height: 0
+        border-top: 10px solid $colorYu
+        border-left: 10px solid transparent
+        float: left
+      .msg
+        background-color: $colorYu
+
+    .me
+      text-align: right
+      .body
+        margin-right: 6px
+      .nick
+        font-size: 16px
+        color: #8f8f8f
+        margin: 2px 0
+      .msg
+        border-radius: $msgBorderRadius
+        border-top-right-radius: 0
+      .arw
+        width: 0
+        height: 0
+        border-top: 10px solid $colorMe
+        border-right: 10px solid transparent
+        float: right
+      .msg
+        background-color: $colorMe
+      .Avt
+        width: 40px
+        height: 40px
+        border-radius: 50%
+        font-size: 12px
+        background-color: #6D71F9
+        color: white
+        margin-top: 6px
+
+    // common
+    .msg
+      max-width: 57vw
+      display: inline-block
+      color: #000
+      padding: 14px 16px
+      text-align: left
+
+.max1line
+  overflow: hidden
+  word-wrap: break-word
+  text-overflow: ellipsis
+  display: -webkit-box
+  -webkit-box-orient: vertical
+  -webkit-line-clamp: 1

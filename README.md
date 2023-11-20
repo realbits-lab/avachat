@@ -1,1 +1,1 @@
-# avachat
+# Avatar Chat Service
