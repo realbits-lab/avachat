@@ -589,13 +589,13 @@ function AvatarView({
           ).rotation.z = 0.2;
 
           //* Add VRM idle animation.
-          const vrmAnimation = await loadVRMAnimation("/idle_loop.vrma");
-          const clip = vrmAnimation.createAnimationClip(currentVrmRef.current);
-          mixerRef.current = new THREE.AnimationMixer(
-            currentVrmRef.current.scene
-          );
-          const action = mixerRef.current.clipAction(clip);
-          action.play();
+          // const vrmAnimation = await loadVRMAnimation("/idle_loop.vrma");
+          // const clip = vrmAnimation.createAnimationClip(currentVrmRef.current);
+          // mixerRef.current = new THREE.AnimationMixer(
+          //   currentVrmRef.current.scene
+          // );
+          // const action = mixerRef.current.clipAction(clip);
+          // action.play();
         }
 
         //* Keep gltf data to loadedGltfData variable.
@@ -769,7 +769,7 @@ function AvatarView({
     orbitControlsRef.current.update(deltaRef.current);
 
     //* Update mixer.
-    mixerRef.current.update(deltaRef.current);
+    // mixerRef.current.update(deltaRef.current);
   }
 
   // Z-index
