@@ -6,70 +6,9 @@ import Image from "next/image";
 import { useContractRead } from "wagmi";
 
 import rentmarketABI from "@/contracts/rentMarket.json";
-import { registerDataStruct, AvatarProps } from "@/src/lib/types";
+import { registerDataStruct } from "@/src/lib/types";
 import Avatar from "@/src/app/chat/home/avatar";
 import BigPlus from "~/assets/svg/BigPlus.svg";
-import MsgBubble from "~/assets/svg/MsgBubble.svg";
-
-function RecommendedAvatarBox(props: AvatarProps) {
-  console.log("props: ", props);
-
-  let atype: string;
-  let faceUrl: string;
-  if (props.isFree) {
-    atype = "FREE";
-    faceUrl = "/img/avatar_face1.png";
-  } else {
-    atype = "NFT";
-    faceUrl = "/img/avatar_face2.png";
-  }
-
-  return (
-    <div
-      className={`recmd border rounded-md shadow-lg shadow-gray-300 ${atype}`}
-    >
-      <b>{atype}</b>
-      <div className="py-2 px-4">
-        <Image
-          src={faceUrl}
-          width={150}
-          height={150}
-          alt="Face"
-          className="mx-4"
-        />
-        <div className="name">아바타 이름</div>
-        <div className="desc">아바타 간단 소개 입니다.</div>
-        <div className="maker flex justify-between">
-          <div className="">아바타제작자</div>
-          <div>
-            <MsgBubble />
-            99.9m
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const recommend_avatars = [
-  true,
-  true,
-  true,
-  true,
-  true,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-];
 
 export default function ChatHome() {
   const RENT_MARKET_CONTRACT_ADDRESS =
@@ -100,7 +39,13 @@ export default function ChatHome() {
       const jsonObject = JSON.parse(jsonString);
       // console.log("jsonObject: ", jsonObject);
 
-      setResultData(jsonObject);
+      // Filter nft address.
+      const filteredJsonObject = jsonObject.filter(
+        (data: registerDataStruct) =>
+          data.nftAddress.toLowerCase() === NFT_CONTRACT_ADDRESS.toLowerCase()
+      );
+
+      setResultData(filteredJsonObject);
     },
     onError(error) {
       console.log("call onError()");
