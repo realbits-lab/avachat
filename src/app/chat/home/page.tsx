@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useContractRead } from "wagmi";
 
+import rentmarketABI from "@/contracts/rentMarket.json";
 import BigPlus from "~/assets/svg/BigPlus.svg";
 import MsgBubble from "~/assets/svg/MsgBubble.svg";
 
@@ -67,6 +69,46 @@ const recommend_avatars = [
 ];
 
 export default function ChatHome() {
+  const RENT_MARKET_CONTRACT_ADDRESS =
+    "0x33e24576b2b0FcE88f7b662E39FfE96C10FCb201";
+  const [resultData, setResultData] = React.useState();
+
+  // Get all register data array.
+  const {
+    data: dataRegisterData,
+    isError: isErrorRegisterData,
+    isLoading: isLoadingRegisterData,
+    isValidating: isValidatingRegisterData,
+    status: statusRegisterData,
+  } = useContractRead({
+    address: RENT_MARKET_CONTRACT_ADDRESS,
+    abi: rentmarketABI.abi,
+    functionName: "getAllRegisterData",
+    // cacheOnBlock: true,
+    // watch: true,
+    onSuccess(data) {
+      console.log("call onSuccess()");
+
+      // Change BitInt to Number format,
+      // because JSON can't parse BigInt format.
+      const jsonString = JSON.stringify(data, (key, value) => {
+        return typeof value === "bigint" ? Number(value) : value;
+      });
+      const jsonObject = JSON.parse(jsonString);
+
+      setResultData(jsonObject);
+    },
+    onError(error) {
+      console.log("call onError()");
+      console.log("error: ", error);
+    },
+    onSettled(data, error) {
+      // console.log("call onSettled()");
+      // console.log("data: ", data);
+      // console.log("error: ", error);
+    },
+  });
+
   return (
     <div className="px-4">
       <h1>채팅 계속하기</h1>
