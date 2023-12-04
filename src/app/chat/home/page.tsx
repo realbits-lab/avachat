@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useContractRead } from "wagmi";
@@ -70,15 +72,14 @@ const recommend_avatars = [
 
 export default function ChatHome() {
   const RENT_MARKET_CONTRACT_ADDRESS =
-    "0x33e24576b2b0FcE88f7b662E39FfE96C10FCb201";
-  const [resultData, setResultData] = React.useState();
+    "0x9300Fc14A9c6a1E0E5bF4229E3389d6aBec29dE3";
+  const [resultData, setResultData] = useState();
 
   // Get all register data array.
   const {
     data: dataRegisterData,
     isError: isErrorRegisterData,
     isLoading: isLoadingRegisterData,
-    isValidating: isValidatingRegisterData,
     status: statusRegisterData,
   } = useContractRead({
     address: RENT_MARKET_CONTRACT_ADDRESS,
