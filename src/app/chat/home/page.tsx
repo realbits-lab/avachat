@@ -6,14 +6,14 @@ import Image from "next/image";
 import { useContractRead } from "wagmi";
 
 import rentmarketABI from "@/contracts/rentMarket.json";
+import { registerDataStruct, AvatarProps } from "@/src/lib/types";
+import Avatar from "@/src/app/chat/home/avatar";
 import BigPlus from "~/assets/svg/BigPlus.svg";
 import MsgBubble from "~/assets/svg/MsgBubble.svg";
 
-interface RecAvatarProps {
-  isFree?: boolean;
-}
+function RecommendedAvatarBox(props: AvatarProps) {
+  console.log("props: ", props);
 
-function RecommendedAvatarBox(props: RecAvatarProps) {
   let atype: string;
   let faceUrl: string;
   if (props.isFree) {
@@ -98,7 +98,7 @@ export default function ChatHome() {
         return typeof value === "bigint" ? Number(value) : value;
       });
       const jsonObject = JSON.parse(jsonString);
-      console.log("jsonObject: ", jsonObject);
+      // console.log("jsonObject: ", jsonObject);
 
       setResultData(jsonObject);
     },
@@ -138,9 +138,12 @@ export default function ChatHome() {
       <br />
       <h1>추천</h1>
       <div className="flex gap-6 flex-wrap">
-        {recommend_avatars.map((isFree, idx) => (
-          <RecommendedAvatarBox isFree={isFree} key={idx} />
+        {resultData?.map((registerData: registerDataStruct, idx: number) => (
+          <Avatar registerData={registerData} key={idx} />
         ))}
+        {/* {resultData.map((isFree, idx) => (
+          <RecommendedAvatarBox isFree={isFree} key={idx} />
+        ))} */}
       </div>
       <br />
     </div>
