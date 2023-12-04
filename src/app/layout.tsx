@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 //import { Inter } from "next/font/google";
+import { Providers } from "@/src/app/providers";
 import "./globals.css";
 import "./app.sass";
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
