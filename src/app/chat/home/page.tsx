@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useContractRead } from "wagmi";
@@ -73,7 +74,8 @@ const recommend_avatars = [
 export default function ChatHome() {
   const RENT_MARKET_CONTRACT_ADDRESS =
     "0x9300Fc14A9c6a1E0E5bF4229E3389d6aBec29dE3";
-  const [resultData, setResultData] = useState();
+  const NFT_CONTRACT_ADDRESS = "0x57fa5aCCb57d5129eF6b9b9fb6170185B648eA2f";
+  const [resultData, setResultData] = React.useState();
 
   // Get all register data array.
   const {
@@ -96,6 +98,7 @@ export default function ChatHome() {
         return typeof value === "bigint" ? Number(value) : value;
       });
       const jsonObject = JSON.parse(jsonString);
+      console.log("jsonObject: ", jsonObject);
 
       setResultData(jsonObject);
     },
@@ -135,8 +138,8 @@ export default function ChatHome() {
       <br />
       <h1>추천</h1>
       <div className="flex gap-6 flex-wrap">
-        {recommend_avatars.map((isFree, i) => (
-          <RecommendedAvatarBox isFree={isFree} key={i} />
+        {recommend_avatars.map((isFree, idx) => (
+          <RecommendedAvatarBox isFree={isFree} key={idx} />
         ))}
       </div>
       <br />
