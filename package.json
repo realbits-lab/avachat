@@ -10,11 +10,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@loadable/component": "^5.15.3",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.19",
+    "@pixiv/three-vrm": "^2.0.7",
     "next": "14.0.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-is": "^18.2.0",
     "react-ts-typewriter": "^0.1.8-b",
     "sharp": "^0.32.6",
+    "three": "^0.159.0",
+    "three-stdlib": "^2.28.7",
     "wagmi": "^1.4.7"
   },
   "devDependencies": {

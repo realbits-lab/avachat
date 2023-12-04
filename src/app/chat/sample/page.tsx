@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Typewriter from "react-ts-typewriter";
 
+import AvatarView from "@/src/app/chat/sample/AvatarView";
+import ChatMessage from "@/src/app/chat/sample/ChatMessage";
 import BackArrow from "~/assets/svg/BackArrow.svg";
 import SendMsg from "~/assets/svg/SendMsg.svg";
 
@@ -178,6 +180,15 @@ export default function ChatHome() {
     }
   }, [chatHist.length]);
 
+  const setAvatarExpressionFuncRef = React.useRef();
+  const setTalkFuncRef = React.useRef();
+  const getImageDataUrl = React.useRef();
+  const getMediaStreamFuncRef = React.useRef();
+  const setAvatarPositionFuncRef = React.useRef();
+  const AVACHAT_MODE = "avachat";
+  const avatarUrl =
+    "https://dulls-nft.s3.ap-northeast-2.amazonaws.com/vrm/1.vrm";
+
   return (
     <div className="talk absolute inset-0 flex flex-col">
       <div className="head flex items-center px-4 bg-white flex-shrink-0">
@@ -188,7 +199,27 @@ export default function ChatHome() {
       </div>
 
       <div className="flex flex-grow">
-        <div className="overflow-hidden w-[20vw]">
+        <ChatMessage
+          setAvatarExpressionFuncRef={setAvatarExpressionFuncRef}
+          setTalkFuncRef={setTalkFuncRef}
+        />
+        <AvatarView
+          showGuideCanvas={false}
+          showFrameStats={false}
+          useMotionUpdate={false}
+          inputGltfDataUrl={avatarUrl}
+          getImageDataUrlFunc={getImageDataUrl}
+          // VideoChat -> AvatarView call for new Remon.
+          // TakeVideo -> AvatarView call for recording video.
+          getMediaStreamFunc={getMediaStreamFuncRef}
+          // VideoChat -> AvatarView call for changing avatar canvas position.
+          // ScreenView -> AvatarView call for changing avatar canvas position.
+          setAvatarPositionFunc={setAvatarPositionFuncRef}
+          setAvatarExpressionFuncRef={setAvatarExpressionFuncRef}
+          setTalkFuncRef={setTalkFuncRef}
+          serviceMode={AVACHAT_MODE}
+        />
+        {/* <div className="overflow-hidden w-[20vw]">
           <Image
             src="/img/avatar_full.png"
             width={315}
@@ -240,6 +271,7 @@ export default function ChatHome() {
             </button>
           </div>
         </div>
+        */}
       </div>
     </div>
   );
