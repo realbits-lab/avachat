@@ -56,7 +56,64 @@ export default function ChatMessage({
     setIsMicRecording(true);
   }, [isMicRecording, speechRecognition]);
 
-  const handleSendChat = React.useCallback(
+  const handleSendChat = React.useCallback(async function (message) {
+    console.log("call handleSendChat()");
+    console.log("message: ", message);
+
+    const THOTHY_SAMPLE_API_KEY = process.env.NEXT_PUBLIC_THOTHY_API_KEY;
+    const THOTHY_SAMPLE_CHAT_ID = "b395b021-6b0e-49c4-91b3-3fbebe330095";
+    const THOTHY_CHAT_API_URL = `https://test-api.thothy.ai/chat/${THOTHY_SAMPLE_CHAT_ID}/question`;
+
+    // Check error.
+    if (message == null) {
+      return;
+    }
+
+    // Set chat processing status.
+    setChatProcessing(true);
+
+    // Make a message log with message.
+    const messageLog = [...chatLog, { role: "user", content: message }];
+    setChatLog(messageLog);
+
+    let jsonResponse;
+    try {
+      const response = await fetch(THOTHY_CHAT_API_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${THOTHY_SAMPLE_API_KEY}`,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          question: message,
+        }),
+      });
+
+      jsonResponse = await response.json();
+      console.log("jsonResponse: ", jsonResponse);
+      console.log("jsonResponse.assistant: ", jsonResponse.assistant);
+
+      startUtterance({ sentence: jsonResponse.assistant });
+    } catch (error) {
+      setChatProcessing(false);
+      console.error(error);
+    } finally {
+      messageInputRef.current.focus();
+    }
+
+    // Add assistant response to chat message log.
+    setAssistantMessage(jsonResponse.assistant);
+    const messageLogAssistant = [
+      ...messageLog,
+      { role: "assistant", content: jsonResponse.assistant },
+    ];
+
+    setChatLog(messageLogAssistant);
+    setChatProcessing(false);
+    setChatMessage("");
+  }, []);
+
+  const handleSendChatToChatGPT = React.useCallback(
     async function (message) {
       // console.log("call handleSendChat()");
       // console.log("openAiKey: ", openAiKey);
@@ -327,7 +384,7 @@ Let's start the conversation.`;
     const utterance = new SpeechSynthesisUtterance(sentence);
     const speechSynthesis = window.speechSynthesis;
 
-		utterance.rate = 0.9;
+    utterance.rate = 0.9;
     utterance.onstart = () => {
       if (setTalkFuncRef.current) {
         setTalkFuncRef.current({ talking: true });
