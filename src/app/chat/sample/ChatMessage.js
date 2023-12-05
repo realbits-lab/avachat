@@ -13,6 +13,7 @@ import { Typography } from "@mui/material";
 export default function ChatMessage({
   setAvatarExpressionFuncRef,
   setTalkFuncRef,
+  botId,
 }) {
   const [chatProcessing, setChatProcessing] = React.useState(false);
   const [chatMessage, setChatMessage] = React.useState("");
@@ -61,7 +62,6 @@ export default function ChatMessage({
     console.log("message: ", message);
 
     const THOTHY_SAMPLE_API_KEY = process.env.NEXT_PUBLIC_THOTHY_API_KEY;
-    const THOTHY_SAMPLE_CHAT_ID = "b395b021-6b0e-49c4-91b3-3fbebe330095";
     const THOTHY_CHAT_API_URL = `https://test-api.thothy.ai/chat/${THOTHY_SAMPLE_CHAT_ID}/question`;
 
     // Check error.
@@ -289,6 +289,9 @@ Let's start the conversation.`;
   }, []);
 
   React.useEffect(() => {
+    async function createChatSession() {}
+    createChatSession();
+
     const SpeechRecognition =
       window.webkitSpeechRecognition || window.SpeechRecognition;
 
