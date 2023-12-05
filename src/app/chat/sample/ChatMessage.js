@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -9,12 +9,16 @@ import MicIcon from "@mui/icons-material/Mic";
 import SearchIcon from "@mui/icons-material/Search";
 import SendIcon from "@mui/icons-material/Send";
 import { Typography } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 
 export default function ChatMessage({
   setAvatarExpressionFuncRef,
   setTalkFuncRef,
   botId,
 }) {
+  const THOTHY_SAMPLE_API_KEY = process.env.NEXT_PUBLIC_THOTHY_API_KEY;
+  const THOTHY_CHAT_API_URL = `https://test-api.thothy.ai/chat`;
+
   const [chatProcessing, setChatProcessing] = React.useState(false);
   const [chatMessage, setChatMessage] = React.useState("");
   const [assistantMessage, setAssistantMessage] = React.useState("");
@@ -24,6 +28,7 @@ export default function ChatMessage({
   const [speechRecognition, setSpeechRecognition] = React.useState();
   const [isMicRecording, setIsMicRecording] = React.useState(false);
   const Z_INDEX = 500;
+  const chatIdRef = React.useRef();
 
   const captureKeyDown = React.useCallback((event) => {
     // console.log("event.key: ", event.key);
@@ -61,11 +66,8 @@ export default function ChatMessage({
     console.log("call handleSendChat()");
     console.log("message: ", message);
 
-    const THOTHY_SAMPLE_API_KEY = process.env.NEXT_PUBLIC_THOTHY_API_KEY;
-    const THOTHY_CHAT_API_URL = `https://test-api.thothy.ai/chat/${THOTHY_SAMPLE_CHAT_ID}/question`;
-
     // Check error.
-    if (message == null) {
+    if (message == null || !chatIdRef.current) {
       return;
     }
 
@@ -78,7 +80,8 @@ export default function ChatMessage({
 
     let jsonResponse;
     try {
-      const response = await fetch(THOTHY_CHAT_API_URL, {
+      const THOTHY_QUESTION_API_URL = `https://test-api.thothy.ai/chat/${chatIdRef.current}/question`;
+      const response = await fetch(THOTHY_QUESTION_API_URL, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${THOTHY_SAMPLE_API_KEY}`,
@@ -289,7 +292,24 @@ Let's start the conversation.`;
   }, []);
 
   React.useEffect(() => {
-    async function createChatSession() {}
+    async function createChatSession() {
+      const uuid = uuidv4();
+      const response = await fetch(THOTHY_CHAT_API_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${THOTHY_SAMPLE_API_KEY}`,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          name: uuid,
+          bot_id: botId,
+        }),
+      });
+      console.log("response: ", response);
+      const jsonResponse = await response.json();
+      console.log("jsonResponse: ", jsonResponse);
+      chatIdRef.current = jsonResponse.chat_id;
+    }
     createChatSession();
 
     const SpeechRecognition =
@@ -307,7 +327,7 @@ Let's start the conversation.`;
     recognition.addEventListener("end", handleRecognitionEnd);
 
     setSpeechRecognition(recognition);
-  }, [handleRecognitionResult, handleRecognitionEnd]);
+  }, []);
 
   React.useEffect(
     function () {
