@@ -1,5 +1,8 @@
+"use client";
+
 import * as React from "react";
-import * as webllm from "@mlc-ai/web-llm";
+// import * as webllm from "@mlc-ai/web-llm";
+import * as webllm from "@thothy/web-llm";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -71,6 +74,24 @@ export default function ChatMessage({
     setSpeechRecognition(recognition);
   }, []);
 
+  const captureKeyDown = React.useCallback((event) => {
+    // console.log("event.key: ", event.key);
+    // console.log("document.activeElement: ", document.activeElement);
+    if (event.key === "Tab") {
+      if (isMessageInputFocusedRef.current === false) {
+        event.preventDefault();
+        handleClickMicButton();
+      }
+    }
+
+    if (event.key === "/") {
+      if (isMessageInputFocusedRef.current === false) {
+        event.preventDefault();
+        messageInputRef.current.focus();
+      }
+    }
+  }, []);
+
   // Add key event listener.
   React.useEffect(
     function () {
@@ -94,27 +115,22 @@ export default function ChatMessage({
       });
 
       // Load LLM model.
-      await chat.reload("Llama-2-7b-chat-hf-q4f32_1");
+      // await chat.reload("Llama-2-7b-chat-hf-q4f32_1");
+      await chat.reload("vicuna-v1-7b-q4f32_0", undefined, {
+        model_list: [
+          {
+            model_url:
+              "https://huggingface.co/mlc-ai/mlc-chat-vicuna-v1-7b-q4f32_0/resolve/main/",
+            local_id: "vicuna-v1-7b-q4f32_0",
+          },
+        ],
+        model_lib_map: {
+          "vicuna-v1-7b-q4f32_0":
+            "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/vicuna-v1-7b-q4f32_0-webgpu-v1.wasm",
+        },
+      });
     }
     createWebLLM();
-  }, []);
-
-  const captureKeyDown = React.useCallback((event) => {
-    // console.log("event.key: ", event.key);
-    // console.log("document.activeElement: ", document.activeElement);
-    if (event.key === "Tab") {
-      if (isMessageInputFocusedRef.current === false) {
-        event.preventDefault();
-        handleClickMicButton();
-      }
-    }
-
-    if (event.key === "/") {
-      if (isMessageInputFocusedRef.current === false) {
-        event.preventDefault();
-        messageInputRef.current.focus();
-      }
-    }
   }, []);
 
   const handleClickMicButton = React.useCallback(() => {
