@@ -116,6 +116,60 @@ export default function ChatMessage({
     setChatMessage("");
   }, []);
 
+  const handleSendChatToThothy = React.useCallback(async function (message) {
+    console.log("call handleSendChat()");
+    console.log("message: ", message);
+
+    // Check error.
+    if (message == null || !chatIdRef.current) {
+      return;
+    }
+
+    // Set chat processing status.
+    setChatProcessing(true);
+
+    // Make a message log with message.
+    const messageLog = [...chatLog, { role: "user", content: message }];
+    setChatLog(messageLog);
+
+    let jsonResponse;
+    try {
+      const THOTHY_QUESTION_API_URL = `https://test-api.thothy.ai/chat/${chatIdRef.current}/question`;
+      const response = await fetch(THOTHY_QUESTION_API_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${THOTHY_SAMPLE_API_KEY}`,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          question: message,
+        }),
+      });
+
+      jsonResponse = await response.json();
+      console.log("jsonResponse: ", jsonResponse);
+      console.log("jsonResponse.assistant: ", jsonResponse.assistant);
+
+      startUtterance({ sentence: jsonResponse.assistant });
+    } catch (error) {
+      setChatProcessing(false);
+      console.error(error);
+    } finally {
+      messageInputRef.current.focus();
+    }
+
+    // Add assistant response to chat message log.
+    setAssistantMessage(jsonResponse.assistant);
+    const messageLogAssistant = [
+      ...messageLog,
+      { role: "assistant", content: jsonResponse.assistant },
+    ];
+
+    setChatLog(messageLogAssistant);
+    setChatProcessing(false);
+    setChatMessage("");
+  }, []);
+
   const handleSendChatToChatGPT = React.useCallback(
     async function (message) {
       // console.log("call handleSendChat()");
