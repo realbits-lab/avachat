@@ -33,6 +33,7 @@ export default function ChatMessage({
   const [isMicRecording, setIsMicRecording] = React.useState(false);
   const Z_INDEX = 500;
   const chatIdRef = React.useRef();
+  const chatRef = React.useRef();
 
   // Create chat session.
   // Create speech recognition instance.
@@ -107,16 +108,15 @@ export default function ChatMessage({
   React.useEffect(() => {
     async function createWebLLM() {
       // Create a ChatModule.
-      const chat = new webllm.ChatModule();
+      chatRef.current = new webllm.ChatModule();
 
       // This callback allows us to report initialization progress.
-      chat.setInitProgressCallback((report) => {
+      chatRef.current.setInitProgressCallback((report) => {
         console.log("report.text: ", report.text);
       });
 
       // Load LLM model.
-      // await chat.reload("Llama-2-7b-chat-hf-q4f32_1");
-      await chat.reload("vicuna-v1-7b-q4f32_0", undefined, {
+      await chatRef.current.reload("vicuna-v1-7b-q4f32_0", undefined, {
         model_list: [
           {
             model_url:
@@ -169,7 +169,10 @@ export default function ChatMessage({
 
     let response;
     try {
-      response = await chat.generate(message, generateProgressCallback);
+      response = await chatRef.current.generate(
+        message,
+        generateProgressCallback
+      );
       console.log("response: ", response);
 
       startUtterance({ sentence: response });
