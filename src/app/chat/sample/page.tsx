@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 
 import Link from "next/link";
@@ -188,6 +189,7 @@ export default function ChatHome() {
   const AVACHAT_MODE = "avachat";
   const avatarUrl =
     "https://dulls-nft.s3.ap-northeast-2.amazonaws.com/vrm/1.vrm";
+  const THOTHY_SAMPLE_BOT_ID = "00249ecb-5322-4278-af01-c3ddc10f2971";
 
   return (
     <div className="talk absolute inset-0 flex flex-col">
@@ -202,6 +204,7 @@ export default function ChatHome() {
         <ChatMessage
           setAvatarExpressionFuncRef={setAvatarExpressionFuncRef}
           setTalkFuncRef={setTalkFuncRef}
+          botId={THOTHY_SAMPLE_BOT_ID}
         />
         <AvatarView
           showGuideCanvas={false}
