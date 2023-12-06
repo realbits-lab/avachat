@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as webllm from "@mlc-ai/web-llm";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -29,6 +30,74 @@ export default function ChatMessage({
   const [isMicRecording, setIsMicRecording] = React.useState(false);
   const Z_INDEX = 500;
   const chatIdRef = React.useRef();
+
+  // Create chat session.
+  // Create speech recognition instance.
+  React.useEffect(() => {
+    async function createChatSession() {
+      const uuid = uuidv4();
+      const response = await fetch(THOTHY_CHAT_API_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${THOTHY_SAMPLE_API_KEY}`,
+        },
+        method: "POST",
+        body: JSON.stringify({
+          name: uuid,
+          bot_id: botId,
+        }),
+      });
+      console.log("response: ", response);
+      const jsonResponse = await response.json();
+      console.log("jsonResponse: ", jsonResponse);
+      chatIdRef.current = jsonResponse.chat_id;
+    }
+    createChatSession();
+
+    const SpeechRecognition =
+      window.webkitSpeechRecognition || window.SpeechRecognition;
+
+    if (!SpeechRecognition) {
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    recognition.addEventListener("result", handleRecognitionResult);
+    recognition.addEventListener("end", handleRecognitionEnd);
+
+    setSpeechRecognition(recognition);
+  }, []);
+
+  // Add key event listener.
+  React.useEffect(
+    function () {
+      document.addEventListener("keydown", captureKeyDown, false);
+
+      return () => {
+        document.removeEventListener("keydown", captureKeyDown, false);
+      };
+    },
+    [captureKeyDown]
+  );
+
+  React.useEffect(() => {
+    async function createWebLLM() {
+      // Create a ChatModule.
+      const chat = new webllm.ChatModule();
+
+      // This callback allows us to report initialization progress.
+      chat.setInitProgressCallback((report) => {
+        console.log("report.text: ", report.text);
+      });
+
+      // Load LLM model.
+      await chat.reload("Llama-2-7b-chat-hf-q4f32_1");
+    }
+    createWebLLM();
+  }, []);
 
   const captureKeyDown = React.useCallback((event) => {
     // console.log("event.key: ", event.key);
@@ -66,6 +135,10 @@ export default function ChatMessage({
     console.log("call handleSendChat()");
     console.log("message: ", message);
 
+    const generateProgressCallback = (_step, message) => {
+      console.log(`_step: ${_step} / message: ${message}`);
+    };
+
     // Check error.
     if (message == null || !chatIdRef.current) {
       return;
@@ -78,25 +151,12 @@ export default function ChatMessage({
     const messageLog = [...chatLog, { role: "user", content: message }];
     setChatLog(messageLog);
 
-    let jsonResponse;
+    let response;
     try {
-      const THOTHY_QUESTION_API_URL = `https://test-api.thothy.ai/chat/${chatIdRef.current}/question`;
-      const response = await fetch(THOTHY_QUESTION_API_URL, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${THOTHY_SAMPLE_API_KEY}`,
-        },
-        method: "POST",
-        body: JSON.stringify({
-          question: message,
-        }),
-      });
+      response = await chat.generate(message, generateProgressCallback);
+      console.log("response: ", response);
 
-      jsonResponse = await response.json();
-      console.log("jsonResponse: ", jsonResponse);
-      console.log("jsonResponse.assistant: ", jsonResponse.assistant);
-
-      startUtterance({ sentence: jsonResponse.assistant });
+      startUtterance({ sentence: response });
     } catch (error) {
       setChatProcessing(false);
       console.error(error);
@@ -105,10 +165,10 @@ export default function ChatMessage({
     }
 
     // Add assistant response to chat message log.
-    setAssistantMessage(jsonResponse.assistant);
+    setAssistantMessage(response);
     const messageLogAssistant = [
       ...messageLog,
-      { role: "assistant", content: jsonResponse.assistant },
+      { role: "assistant", content: response },
     ];
 
     setChatLog(messageLogAssistant);
@@ -344,55 +404,6 @@ Let's start the conversation.`;
   const handleRecognitionEnd = React.useCallback(() => {
     setIsMicRecording(false);
   }, []);
-
-  React.useEffect(() => {
-    async function createChatSession() {
-      const uuid = uuidv4();
-      const response = await fetch(THOTHY_CHAT_API_URL, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${THOTHY_SAMPLE_API_KEY}`,
-        },
-        method: "POST",
-        body: JSON.stringify({
-          name: uuid,
-          bot_id: botId,
-        }),
-      });
-      console.log("response: ", response);
-      const jsonResponse = await response.json();
-      console.log("jsonResponse: ", jsonResponse);
-      chatIdRef.current = jsonResponse.chat_id;
-    }
-    createChatSession();
-
-    const SpeechRecognition =
-      window.webkitSpeechRecognition || window.SpeechRecognition;
-
-    if (!SpeechRecognition) {
-      return;
-    }
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
-    recognition.interimResults = true;
-    recognition.continuous = false;
-
-    recognition.addEventListener("result", handleRecognitionResult);
-    recognition.addEventListener("end", handleRecognitionEnd);
-
-    setSpeechRecognition(recognition);
-  }, []);
-
-  React.useEffect(
-    function () {
-      document.addEventListener("keydown", captureKeyDown, false);
-
-      return () => {
-        document.removeEventListener("keydown", captureKeyDown, false);
-      };
-    },
-    [captureKeyDown]
-  );
 
   async function startUtterance({ sentence = "" }) {
     if (sentence === "") throw new Error("no words to synthesize");
