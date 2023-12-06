@@ -13,7 +13,6 @@ const nextConfig = {
       },
     ],
   },
-  transpilePackages: ["@thothy/web-llm"],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/i,

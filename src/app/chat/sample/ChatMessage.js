@@ -105,33 +105,34 @@ export default function ChatMessage({
     [captureKeyDown]
   );
 
-  React.useEffect(() => {
-    async function createWebLLM() {
-      // Create a ChatModule.
-      chatRef.current = new webllm.ChatModule();
+	//* TODO: Handle web-llm later.
+  // React.useEffect(() => {
+  //   async function createWebLLM() {
+  //     // Create a ChatModule.
+  //     chatRef.current = new webllm.ChatModule();
 
-      // This callback allows us to report initialization progress.
-      chatRef.current.setInitProgressCallback((report) => {
-        console.log("report.text: ", report.text);
-      });
+  //     // This callback allows us to report initialization progress.
+  //     chatRef.current.setInitProgressCallback((report) => {
+  //       console.log("report.text: ", report.text);
+  //     });
 
-      // Load LLM model.
-      await chatRef.current.reload("vicuna-v1-7b-q4f32_0", undefined, {
-        model_list: [
-          {
-            model_url:
-              "https://huggingface.co/mlc-ai/mlc-chat-vicuna-v1-7b-q4f32_0/resolve/main/",
-            local_id: "vicuna-v1-7b-q4f32_0",
-          },
-        ],
-        model_lib_map: {
-          "vicuna-v1-7b-q4f32_0":
-            "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/vicuna-v1-7b-q4f32_0-webgpu-v1.wasm",
-        },
-      });
-    }
-    createWebLLM();
-  }, []);
+  //     // Load LLM model.
+  //     await chatRef.current.reload("vicuna-v1-7b-q4f32_0", undefined, {
+  //       model_list: [
+  //         {
+  //           model_url:
+  //             "https://huggingface.co/mlc-ai/mlc-chat-vicuna-v1-7b-q4f32_0/resolve/main/",
+  //           local_id: "vicuna-v1-7b-q4f32_0",
+  //         },
+  //       ],
+  //       model_lib_map: {
+  //         "vicuna-v1-7b-q4f32_0":
+  //           "https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/vicuna-v1-7b-q4f32_0-webgpu-v1.wasm",
+  //       },
+  //     });
+  //   }
+  //   createWebLLM();
+  // }, []);
 
   const handleClickMicButton = React.useCallback(() => {
     // console.log("call handleClickMicButton()");
@@ -147,7 +148,7 @@ export default function ChatMessage({
     setIsMicRecording(true);
   }, [isMicRecording, speechRecognition]);
 
-  const handleSendChat = React.useCallback(async function (message) {
+  const handleSendChatToWebLLM = React.useCallback(async function (message) {
     console.log("call handleSendChat()");
     console.log("message: ", message);
 
@@ -406,6 +407,8 @@ Let's start the conversation.`;
     },
     [chatLog, setAvatarExpressionFuncRef]
   );
+
+  const handleSendChat = handleSendChatToThothy;
 
   const handleRecognitionResult = React.useCallback(
     (event) => {
