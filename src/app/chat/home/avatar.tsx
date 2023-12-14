@@ -1,12 +1,13 @@
 import * as React from "react";
 import Image from "next/image";
 import { useContractRead } from "wagmi";
+import Avatar from "@mui/material/Avatar"
 
 import { registerDataStruct, AvatarProps } from "@/src/lib/types";
 import publicNFTABI from "@/contracts/publicNFT.json";
 import MsgBubble from "~/assets/svg/MsgBubble.svg";
 
-export default function Avatar(props: AvatarProps) {
+export default function AvatarComponent(props: AvatarProps) {
   // console.log("props: ", props);
   // feeTokenAddress : "0xA6660c34F3A2BCaD5181363ac4Ba1f96136244E2"
   // nftAddress : "0x8fA1f12132Fd6770703BCABEFc7E1b0B47F81D80"
@@ -88,6 +89,8 @@ export default function Avatar(props: AvatarProps) {
             className="mx-4"
           />
         )} */}
+        <Avatar alt="avatar image" src="/static/images/avatar/1.jpg" />
+
         <div className="name">{metadata?.name}</div>
         <div className="desc">{metadata?.description}</div>
         <div className="maker flex justify-between">

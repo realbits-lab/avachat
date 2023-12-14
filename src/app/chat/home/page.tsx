@@ -7,8 +7,8 @@ import { useContractRead } from "wagmi";
 
 import rentmarketABI from "@/contracts/rentMarket.json";
 import { registerDataStruct, rentDataStruct } from "@/src/lib/types";
-import Avatar from "@/src/app/chat/home/avatar";
 import BigPlus from "~/assets/svg/BigPlus.svg";
+import AvatarComponent from "@/src/app/chat/home/avatar";
 
 export default function ChatHome() {
   const RENT_MARKET_CONTRACT_ADDRESS =
@@ -133,7 +133,7 @@ export default function ChatHome() {
       <div className="flex gap-6 flex-wrap">
         {registerDataArray?.map(
           (registerData: registerDataStruct, idx: number) => (
-            <Avatar registerData={registerData} key={idx} />
+            <AvatarComponent registerData={registerData} key={idx} />
           )
         )}
       </div>
