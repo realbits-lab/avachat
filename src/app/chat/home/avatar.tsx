@@ -23,7 +23,7 @@ export default function Avatar(props: AvatarProps) {
     isLoading: isLoadingTokenURI,
     status: statusTokenURI,
   } = useContractRead({
-    address: props.registerData?.nftAddress,
+    address: props.registerData?.nftAddress as `0x${string}`,
     abi: publicNFTABI.abi,
     functionName: "tokenURI",
     args: [props.registerData?.tokenId],
