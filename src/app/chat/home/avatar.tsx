@@ -1,13 +1,17 @@
 import * as React from "react";
-import Image from "next/image";
 import { useContractRead } from "wagmi";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
 
 import { registerDataStruct, AvatarProps } from "@/src/lib/types";
 import publicNFTABI from "@/contracts/publicNFT.json";
 import MsgBubble from "~/assets/svg/MsgBubble.svg";
 
-export default function Avatar(props: AvatarProps) {
+export default function AvatarComponent(props: AvatarProps) {
   // console.log("props: ", props);
+
+  //* You can divide free and commercial item based on this rentFee.
+  const rentFee = (props.registerData?.rentFee || 0) / Math.pow(10, 18);
   // feeTokenAddress : "0xA6660c34F3A2BCaD5181363ac4Ba1f96136244E2"
   // nftAddress : "0x8fA1f12132Fd6770703BCABEFc7E1b0B47F81D80"
   // rentDuration : 86400
@@ -23,7 +27,7 @@ export default function Avatar(props: AvatarProps) {
     isLoading: isLoadingTokenURI,
     status: statusTokenURI,
   } = useContractRead({
-    address: props.registerData?.nftAddress,
+    address: props.registerData?.nftAddress as `0x${string}`,
     abi: publicNFTABI.abi,
     functionName: "tokenURI",
     args: [props.registerData?.tokenId],
@@ -79,15 +83,12 @@ export default function Avatar(props: AvatarProps) {
     >
       <b>{atype}</b>
       <div className="py-2 px-4">
-        {/* {metadata?.image && (
-          <Image
-            src={metadata?.image}
-            width={150}
-            height={150}
-            alt="Face"
-            className="mx-4"
-          />
-        )} */}
+        <Avatar
+          alt="avatar image"
+          src={metadata?.image}
+          sx={{ width: 102, height: 102 }}
+        />
+
         <div className="name">{metadata?.name}</div>
         <div className="desc">{metadata?.description}</div>
         <div className="maker flex justify-between">
@@ -97,6 +98,8 @@ export default function Avatar(props: AvatarProps) {
             99.9m
           </div>
         </div>
+        <Typography variant="h6">Price</Typography>
+        <Typography variant="body2">{rentFee}</Typography>
       </div>
     </div>
   );
