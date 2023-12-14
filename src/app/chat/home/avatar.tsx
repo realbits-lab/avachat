@@ -1,7 +1,6 @@
 import * as React from "react";
-import Image from "next/image";
 import { useContractRead } from "wagmi";
-import Avatar from "@mui/material/Avatar"
+import Avatar from "@mui/material/Avatar";
 
 import { registerDataStruct, AvatarProps } from "@/src/lib/types";
 import publicNFTABI from "@/contracts/publicNFT.json";
@@ -80,16 +79,11 @@ export default function AvatarComponent(props: AvatarProps) {
     >
       <b>{atype}</b>
       <div className="py-2 px-4">
-        {/* {metadata?.image && (
-          <Image
-            src={metadata?.image}
-            width={150}
-            height={150}
-            alt="Face"
-            className="mx-4"
-          />
-        )} */}
-        <Avatar alt="avatar image" src="/static/images/avatar/1.jpg" />
+        <Avatar
+          alt="avatar image"
+          src={metadata?.image}
+          sx={{ width: 102, height: 102 }}
+        />
 
         <div className="name">{metadata?.name}</div>
         <div className="desc">{metadata?.description}</div>
