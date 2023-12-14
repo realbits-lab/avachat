@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useContractRead } from "wagmi";
 import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
 
 import { registerDataStruct, AvatarProps } from "@/src/lib/types";
 import publicNFTABI from "@/contracts/publicNFT.json";
@@ -8,6 +9,9 @@ import MsgBubble from "~/assets/svg/MsgBubble.svg";
 
 export default function AvatarComponent(props: AvatarProps) {
   // console.log("props: ", props);
+
+  //* You can divide free and commercial item based on this rentFee.
+  const rentFee = (props.registerData?.rentFee || 0) / Math.pow(10, 18);
   // feeTokenAddress : "0xA6660c34F3A2BCaD5181363ac4Ba1f96136244E2"
   // nftAddress : "0x8fA1f12132Fd6770703BCABEFc7E1b0B47F81D80"
   // rentDuration : 86400
@@ -94,6 +98,8 @@ export default function AvatarComponent(props: AvatarProps) {
             99.9m
           </div>
         </div>
+        <Typography variant="h6">Price</Typography>
+        <Typography variant="body2">{rentFee}</Typography>
       </div>
     </div>
   );
