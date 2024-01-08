@@ -22,35 +22,35 @@ export default function ChatLayout(props: ChildrenProps) {
           <button>
             <MenuHome />
           </button>
-          <label>홈</label>
+          <label>Home</label>
         </Link>
 
         <Link href="#" className="disabled">
           <button>
             <MenuAvatarList />
           </button>
-          <label>아바타 리스트</label>
+          <label>Avatar list</label>
         </Link>
 
         <Link href="#" className="disabled">
           <button>
             <MenuChatList />
           </button>
-          <label>챗팅 리스트</label>
+          <label>Chat list</label>
         </Link>
 
         <Link href="#" className="disabled">
           <button>
             <MenuNftMarket />
           </button>
-          <label>NFT 마켓</label>
+          <label>NFT market</label>
         </Link>
 
         <Link href="#" className="disabled">
           <button>
             <MenuAvatarMake />
           </button>
-          <label>아바타 만들기</label>
+          <label>Create avatar</label>
         </Link>
       </aside>
       <main className="relative">{props.children}</main>
