@@ -12,8 +12,8 @@ import AvatarComponent from "@/src/app/chat/home/avatar";
 
 export default function ChatHome() {
   const RENT_MARKET_CONTRACT_ADDRESS =
-    "0x9300Fc14A9c6a1E0E5bF4229E3389d6aBec29dE3";
-  const NFT_CONTRACT_ADDRESS = "0x57fa5aCCb57d5129eF6b9b9fb6170185B648eA2f";
+    process.env.NEXT_PUBLIC_RENT_MARKET_CONTRACT_ADDRESS;
+  const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
   const [registerDataArray, setRegisterDataArray] = React.useState<
     registerDataStruct[]
   >([]);
