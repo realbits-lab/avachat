@@ -6,19 +6,26 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
+import { getContract } from "@wagmi/core";
 import { formatEther, Address } from "viem";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { registerDataStruct, AvatarProps } from "@/src/lib/types";
 import publicNFTABI from "@/contracts/publicNFT.json";
+import faucetTokenABI from "@/contracts/faucetToken.json";
 import rentmarketABI from "@/contracts/rentMarket.json";
+import { erc20PermitSignature } from "@/src/lib/PermitSignature";
 
 export default function AvatarComponent(props: AvatarProps) {
   // console.log("props: ", props);
 
   //* You can divide free and commercial item based on this rentFee.
   const rentFee = (props.registerData?.rentFee || 0) / Math.pow(10, 18);
+  //* TODO: Consider token decimal.
+  const rentFeeByToken =
+    (props.registerData?.rentFeeByToken || 0) / Math.pow(10, 18);
+
   // feeTokenAddress : "0xA6660c34F3A2BCaD5181363ac4Ba1f96136244E2"
   // nftAddress : "0x8fA1f12132Fd6770703BCABEFc7E1b0B47F81D80"
   // rentDuration : 86400
@@ -30,6 +37,9 @@ export default function AvatarComponent(props: AvatarProps) {
   const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
   const SERVICE_OWNER_ADDRESS = process.env.NEXT_PUBLIC_SERVICE_OWNER_ADDRESS;
   const [metadata, setMetadata] = React.useState();
+
+  const { address, connector, isConnected } = useAccount();
+  const { chains, chain } = useNetwork();
 
   const {
     data: dataTokenURI,
@@ -157,7 +167,7 @@ export default function AvatarComponent(props: AvatarProps) {
 
         <div className="name">{metadata?.name}</div>
         <div className="desc">{metadata?.description}</div>
-        <Typography variant="h6">Price: {rentFee} matic</Typography>
+        <Typography variant="h6">Price</Typography>
         <Button
           color="primary"
           variant="outlined"
@@ -176,7 +186,55 @@ export default function AvatarComponent(props: AvatarProps) {
             });
           }}
         >
-          {formatEther(BigInt(props.registerData?.rentFee || 0))}
+          {formatEther(BigInt(props.registerData?.rentFee || 0))} matic
+        </Button>
+
+        <Typography variant="h6">Price</Typography>
+        <Button
+          color="primary"
+          variant="outlined"
+          disabled={
+            props.registerData?.rentFee === 0 &&
+            props.registerData?.rentFeeByToken === 0
+          }
+          onClick={async () => {
+            const contract = getContract({
+              address: props.registerData?.feeTokenAddress as Address,
+              abi: faucetTokenABI.abi,
+            });
+
+            interface Signature {
+              r: string;
+              s: string;
+              v: number;
+              deadline: number;
+            }
+
+            const { r, s, v, deadline }: Signature = await erc20PermitSignature(
+              {
+                owner: address,
+                spender: RENT_MARKET_CONTRACT_ADDRESS,
+                amount: props.registerData?.rentFeeByToken,
+                contract: contract,
+                chain: chain,
+                address: address,
+              }
+            );
+
+            writeRentNftByToken?.({
+              args: [
+                props.registerData?.nftAddress,
+                props.registerData?.tokenId,
+                SERVICE_OWNER_ADDRESS,
+                deadline,
+                v,
+                r,
+                s,
+              ],
+            });
+          }}
+        >
+          {formatEther(BigInt(props.registerData?.rentFeeByToken || 0))} token
         </Button>
       </div>
     </div>
