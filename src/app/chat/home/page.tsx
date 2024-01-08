@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useContractRead } from "wagmi";
+import { useContractRead, useAccount } from "wagmi";
 import { Address } from "viem";
 
 import rentmarketABI from "@/contracts/rentMarket.json";
@@ -21,6 +21,8 @@ export default function ChatHome() {
   const [rentDataArray, setRentDataArray] = React.useState<rentDataStruct[]>(
     []
   );
+
+  const { address } = useAccount();
 
   // Get all rented data array.
   const {
@@ -45,10 +47,12 @@ export default function ChatHome() {
       const jsonObject = JSON.parse(jsonString);
       // console.log("jsonObject: ", jsonObject);
 
-      // Filter nft address.
+      // Filter nft address and wallet address.
       const filteredJsonObject = jsonObject.filter(
-        (data: registerDataStruct) =>
-          data.nftAddress.toLowerCase() === NFT_CONTRACT_ADDRESS.toLowerCase()
+        (data: rentDataStruct) =>
+          data.nftAddress.toLowerCase() ===
+            NFT_CONTRACT_ADDRESS?.toLowerCase() &&
+          data.renteeAddress.toLowerCase() === address?.toLowerCase()
       );
       // console.log("filteredJsonObject: ", filteredJsonObject);
 
@@ -72,7 +76,7 @@ export default function ChatHome() {
     isLoading: isLoadingRegisterData,
     status: statusRegisterData,
   } = useContractRead({
-    address: RENT_MARKET_CONTRACT_ADDRESS,
+    address: RENT_MARKET_CONTRACT_ADDRESS as Address,
     abi: rentmarketABI.abi,
     functionName: "getAllRegisterData",
     // cacheOnBlock: true,
@@ -91,7 +95,7 @@ export default function ChatHome() {
       // Filter nft address.
       const filteredJsonObject = jsonObject.filter(
         (data: registerDataStruct) =>
-          data.nftAddress.toLowerCase() === NFT_CONTRACT_ADDRESS.toLowerCase()
+          data.nftAddress.toLowerCase() === NFT_CONTRACT_ADDRESS?.toLowerCase()
       );
 
       setRegisterDataArray(filteredJsonObject);
@@ -109,7 +113,7 @@ export default function ChatHome() {
 
   return (
     <div className="px-4">
-      <h1>채팅 계속하기</h1>
+      <h1>Rented avatar list</h1>
       <div className="flex gap-6">
         <Link href="/chat/sample/">
           <div className="border rounded-md px-5 py-2 bg-white hover:bg-[#F0F1FF]">
@@ -130,7 +134,9 @@ export default function ChatHome() {
       </div>
 
       <br />
-      <h1>추천</h1>
+
+      <h1>Free avatar list</h1>
+
       <div className="flex gap-6 flex-wrap">
         {registerDataArray?.map(
           (registerData: registerDataStruct, idx: number) => (
@@ -138,6 +144,19 @@ export default function ChatHome() {
           )
         )}
       </div>
+
+      <br />
+
+      <h1>Avatar market</h1>
+
+      <div className="flex gap-6 flex-wrap">
+        {registerDataArray?.map(
+          (registerData: registerDataStruct, idx: number) => (
+            <AvatarComponent registerData={registerData} key={idx} />
+          )
+        )}
+      </div>
+
       <br />
     </div>
   );
