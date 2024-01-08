@@ -1,11 +1,18 @@
 import * as React from "react";
-import { useContractRead } from "wagmi";
+import {
+  useAccount,
+  useNetwork,
+  useContractRead,
+  useContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
+import { formatEther, Address } from "viem";
 import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
 import { registerDataStruct, AvatarProps } from "@/src/lib/types";
 import publicNFTABI from "@/contracts/publicNFT.json";
-import MsgBubble from "~/assets/svg/MsgBubble.svg";
+import rentmarketABI from "@/contracts/rentMarket.json";
 
 export default function AvatarComponent(props: AvatarProps) {
   // console.log("props: ", props);
@@ -18,7 +25,10 @@ export default function AvatarComponent(props: AvatarProps) {
   // rentFee : 10000000000000000
   // rentFeeByToken : 1000000000000000000
   // tokenId : 18
-  const NFT_CONTRACT_ADDRESS = "0x57fa5aCCb57d5129eF6b9b9fb6170185B648eA2f";
+  const RENT_MARKET_CONTRACT_ADDRESS =
+    process.env.NEXT_PUBLIC_RENT_MARKET_CONTRACT_ADDRESS;
+  const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
+  const SERVICE_OWNER_ADDRESS = process.env.NEXT_PUBLIC_SERVICE_OWNER_ADDRESS;
   const [metadata, setMetadata] = React.useState();
 
   const {
@@ -65,7 +75,63 @@ export default function AvatarComponent(props: AvatarProps) {
     },
   });
 
-  React.useEffect(() => {}, []);
+  //* rentNFT function
+  const {
+    data: dataRentNFT,
+    isError: isErrorRentNFT,
+    isLoading: isLoadingRentNFT,
+    write: writeRentNFT,
+  } = useContractWrite({
+    address: RENT_MARKET_CONTRACT_ADDRESS as Address,
+    abi: rentmarketABI?.abi,
+    functionName: "rentNFT",
+    onSuccess(data) {
+      // console.log("call onSuccess()");
+      // console.log("data: ", data);
+    },
+    onError(error) {
+      // console.log("call onSuccess()");
+      // console.log("error: ", error);
+    },
+  });
+  const {
+    data: dataRentNFTTx,
+    isError: isErrorRentNFTTx,
+    isLoading: isLoadingRentNFTTx,
+  } = useWaitForTransaction({
+    hash: dataRentNFT?.hash,
+    onSuccess(data) {},
+    onError(error) {
+      // console.log("call onError()");
+      // console.log("error: ", error);
+    },
+  });
+
+  const { data: dataRentNftByToken, write: writeRentNftByToken } =
+    useContractWrite({
+      address: RENT_MARKET_CONTRACT_ADDRESS as Address,
+      abi: rentmarketABI.abi,
+      functionName: "rentNFTByToken",
+      onSuccess(data) {
+        // console.log("call onSuccess()");
+        // console.log("data: ", data);
+      },
+      onError(error) {
+        // console.log("call onSuccess()");
+        // console.log("error: ", error);
+      },
+    });
+  const {
+    isLoading: isLoadingRentNftByToken,
+    isSuccess: isSuccessRentNftByToken,
+  } = useWaitForTransaction({
+    hash: dataRentNftByToken?.hash,
+    onSuccess(data) {},
+    onError(error) {
+      // console.log("call onError()");
+      // console.log("error: ", error);
+    },
+  });
 
   let atype: string;
   let faceUrl: string;
@@ -92,6 +158,26 @@ export default function AvatarComponent(props: AvatarProps) {
         <div className="name">{metadata?.name}</div>
         <div className="desc">{metadata?.description}</div>
         <Typography variant="h6">Price: {rentFee} matic</Typography>
+        <Button
+          color="primary"
+          variant="outlined"
+          disabled={
+            props.registerData?.rentFee === 0 &&
+            props.registerData?.rentFeeByToken === 0
+          }
+          onClick={async () => {
+            writeRentNFT?.({
+              args: [
+                props.registerData?.nftAddress,
+                props.registerData?.tokenId,
+                SERVICE_OWNER_ADDRESS,
+              ],
+              value: BigInt(props.registerData?.rentFee || 0),
+            });
+          }}
+        >
+          {formatEther(BigInt(props.registerData?.rentFee || 0))}
+        </Button>
       </div>
     </div>
   );
