@@ -18,6 +18,9 @@ export default function ChatHome() {
   const [registerDataArray, setRegisterDataArray] = React.useState<
     registerDataStruct[]
   >([]);
+  const [freeRegisterDataArray, setFreeRegisterDataArray] = React.useState<
+    registerDataStruct[]
+  >([]);
   const [rentDataArray, setRentDataArray] = React.useState<rentDataStruct[]>(
     []
   );
@@ -97,8 +100,16 @@ export default function ChatHome() {
         (data: registerDataStruct) =>
           data.nftAddress.toLowerCase() === NFT_CONTRACT_ADDRESS?.toLowerCase()
       );
-
       setRegisterDataArray(filteredJsonObject);
+
+      const filteredFreeJsonObject = jsonObject.filter(
+        (data: registerDataStruct) =>
+          data.nftAddress.toLowerCase() ===
+            NFT_CONTRACT_ADDRESS?.toLowerCase() &&
+          data.rentFee === 0 &&
+          data.rentFeeByToken === 0
+      );
+      setFreeRegisterDataArray(filteredFreeJsonObject);
     },
     onError(error) {
       console.log("call onError()");
@@ -114,23 +125,11 @@ export default function ChatHome() {
   return (
     <div className="px-4">
       <h1>Rented avatar list</h1>
-      <div className="flex gap-6">
-        <Link href="/chat/sample/">
-          <div className="border rounded-md px-5 py-2 bg-white hover:bg-[#F0F1FF]">
-            <Image
-              src="/img/avatar_face1.png"
-              width={120}
-              height={120}
-              alt="Face"
-            />
-            <div className="name">AI Avatar 123</div>
-          </div>
-        </Link>
 
-        <div className="more_chat rounded-md flex flex-col justify-center bg-[#f0f0f0] hover:bg-gray-200">
-          <div className="name py-4">더보기</div>
-          <BigPlus />
-        </div>
+      <div className="flex gap-6 flex-wrap">
+        {rentDataArray?.map((registerData: rentDataStruct, idx: number) => (
+          <AvatarComponent registerData={registerData} key={idx} />
+        ))}
       </div>
 
       <br />
@@ -138,9 +137,11 @@ export default function ChatHome() {
       <h1>Free avatar list</h1>
 
       <div className="flex gap-6 flex-wrap">
-        {rentDataArray?.map((registerData: rentDataStruct, idx: number) => (
-          <AvatarComponent registerData={registerData} key={idx} />
-        ))}
+        {freeRegisterDataArray?.map(
+          (registerData: registerDataStruct, idx: number) => (
+            <AvatarComponent registerData={registerData} key={idx} />
+          )
+        )}
       </div>
 
       <br />
