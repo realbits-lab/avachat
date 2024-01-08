@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useContractRead } from "wagmi";
+import { Address } from "viem";
 
 import rentmarketABI from "@/contracts/rentMarket.json";
 import { registerDataStruct, rentDataStruct } from "@/src/lib/types";
@@ -28,7 +29,7 @@ export default function ChatHome() {
     isLoading: isLoadingRentData,
     status: statusRentData,
   } = useContractRead({
-    address: RENT_MARKET_CONTRACT_ADDRESS,
+    address: RENT_MARKET_CONTRACT_ADDRESS as Address,
     abi: rentmarketABI.abi,
     functionName: "getAllRentData",
     // cacheOnBlock: true,
