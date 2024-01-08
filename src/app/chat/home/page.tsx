@@ -9,7 +9,7 @@ import { Address } from "viem";
 import rentmarketABI from "@/contracts/rentMarket.json";
 import { registerDataStruct, rentDataStruct } from "@/src/lib/types";
 import BigPlus from "~/assets/svg/BigPlus.svg";
-import AvatarComponent from "@/src/app/chat/home/avatar";
+import AvatarComponent from "@/src/components/AvatarComponent";
 
 export default function ChatHome() {
   const RENT_MARKET_CONTRACT_ADDRESS =
@@ -138,11 +138,9 @@ export default function ChatHome() {
       <h1>Free avatar list</h1>
 
       <div className="flex gap-6 flex-wrap">
-        {registerDataArray?.map(
-          (registerData: registerDataStruct, idx: number) => (
-            <AvatarComponent registerData={registerData} key={idx} />
-          )
-        )}
+        {rentDataArray?.map((registerData: rentDataStruct, idx: number) => (
+          <AvatarComponent registerData={registerData} key={idx} />
+        ))}
       </div>
 
       <br />
