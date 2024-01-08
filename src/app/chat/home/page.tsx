@@ -21,6 +21,8 @@ export default function ChatHome() {
   const [freeRegisterDataArray, setFreeRegisterDataArray] = React.useState<
     registerDataStruct[]
   >([]);
+  const [nonFreeRegisterDataArray, setNonFreeRegisterDataArray] =
+    React.useState<registerDataStruct[]>([]);
   const [rentDataArray, setRentDataArray] = React.useState<rentDataStruct[]>(
     []
   );
@@ -86,6 +88,7 @@ export default function ChatHome() {
     // watch: true,
     onSuccess(data) {
       console.log("call onSuccess()");
+      console.log("data: ", data);
 
       // Change BitInt to Number format,
       // because JSON can't parse BigInt format.
@@ -93,7 +96,7 @@ export default function ChatHome() {
         return typeof value === "bigint" ? Number(value) : value;
       });
       const jsonObject = JSON.parse(jsonString);
-      // console.log("jsonObject: ", jsonObject);
+      console.log("jsonObject: ", jsonObject);
 
       // Filter nft address.
       const filteredJsonObject = jsonObject.filter(
@@ -110,6 +113,14 @@ export default function ChatHome() {
           data.rentFeeByToken === 0
       );
       setFreeRegisterDataArray(filteredFreeJsonObject);
+
+      const filteredNonFreeJsonObject = jsonObject.filter(
+        (data: registerDataStruct) =>
+          data.nftAddress.toLowerCase() ===
+            NFT_CONTRACT_ADDRESS?.toLowerCase() &&
+          (data.rentFee !== 0 || data.rentFeeByToken !== 0)
+      );
+      setNonFreeRegisterDataArray(filteredNonFreeJsonObject);
     },
     onError(error) {
       console.log("call onError()");
@@ -149,7 +160,7 @@ export default function ChatHome() {
       <h1>Avatar market</h1>
 
       <div className="flex gap-6 flex-wrap">
-        {registerDataArray?.map(
+        {nonFreeRegisterDataArray?.map(
           (registerData: registerDataStruct, idx: number) => (
             <AvatarComponent registerData={registerData} key={idx} />
           )
