@@ -69,7 +69,7 @@ export default function AvatarComponent(props: AvatarProps) {
 
   let atype: string;
   let faceUrl: string;
-  if (props.registerData?.rentFee === 0) {
+  if (rentFee === 0) {
     atype = "FREE";
     faceUrl = "/img/avatar_face1.png";
   } else {
@@ -91,15 +91,7 @@ export default function AvatarComponent(props: AvatarProps) {
 
         <div className="name">{metadata?.name}</div>
         <div className="desc">{metadata?.description}</div>
-        <div className="maker flex justify-between">
-          <div className="">아바타제작자</div>
-          <div>
-            <MsgBubble />
-            99.9m
-          </div>
-        </div>
-        <Typography variant="h6">Price</Typography>
-        <Typography variant="body2">{rentFee}</Typography>
+        <Typography variant="h6">Price: {rentFee} matic</Typography>
       </div>
     </div>
   );
