@@ -1,10 +1,10 @@
 import React from "react";
 
 export interface Signature {
-  r: string;
-  s: string;
-  v: number;
-  deadline: number;
+  r: string | undefined;
+  s: string | undefined;
+  v: number | undefined;
+  deadline: number | undefined;
 }
 
 export interface Metadata {
@@ -20,6 +20,7 @@ export interface ChildrenProps {
   children: React.ReactNode;
 }
 
+//* TODO: number type should be bigint.
 export interface registerDataStruct {
   feeTokenAddress: string;
   nftAddress: string;
@@ -29,6 +30,7 @@ export interface registerDataStruct {
   tokenId: number;
 }
 
+//* TODO: number type should be bigint.
 export interface rentDataStruct {
   feeTokenAddress: string;
   isRentByToken: boolean;

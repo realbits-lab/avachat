@@ -1,19 +1,27 @@
 import { utils } from "ethers";
+import { Signature } from "@/src/lib/types";
 
 export async function erc20PermitSignature({
   owner,
   spender,
   amount,
   contract,
-  chain,
+  chainId,
   address,
-}) {
+}: {
+  owner: string | undefined;
+  spender: string | undefined;
+  amount: number | undefined;
+  contract: any;
+  chainId: number | undefined;
+  address: string | undefined;
+}): Promise<Signature | undefined> {
   console.log("call erc20PermitSignature()");
   console.log("owner: ", owner);
   console.log("spender: ", spender);
   console.log("amount: ", amount);
   console.log("contract: ", contract);
-  console.log("chain: ", chain);
+  console.log("chainId: ", chainId);
   console.log("address: ", address);
 
   try {
@@ -34,7 +42,7 @@ export async function erc20PermitSignature({
     const domain = {
       name: contractName,
       version: "1",
-      chainId: chain.id,
+      chainId: chainId,
       verifyingContract: contract.address,
     };
     const Permit = [
@@ -47,7 +55,7 @@ export async function erc20PermitSignature({
     const message = {
       owner,
       spender,
-      value: amount.toString(),
+      value: amount?.toString(),
       nonce: nonce.toString(),
       deadline: transactionDeadline,
     };
@@ -67,7 +75,7 @@ export async function erc20PermitSignature({
     // console.log("params: ", params);
     // console.log("method: ", method);
 
-    const signature = await ethereum.request({
+    const signature = await (window as any).ethereum.request({
       method,
       params,
     });
@@ -86,6 +94,7 @@ export async function erc20PermitSignature({
     };
   } catch (error) {
     console.error("error: ", error);
-    return error;
   }
+
+  return undefined;
 }

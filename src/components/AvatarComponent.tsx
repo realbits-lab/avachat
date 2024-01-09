@@ -6,8 +6,7 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import { getContract } from "@wagmi/core";
-import { formatEther, Address } from "viem";
+import { formatEther, Address, getContract } from "viem";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -209,7 +208,7 @@ export default function AvatarComponent(props: AvatarProps) {
                 spender: RENT_MARKET_CONTRACT_ADDRESS,
                 amount: props.registerData?.rentFeeByToken,
                 contract: contract,
-                chain: chain,
+                chainId: chain?.id,
                 address: address,
               }
             );
