@@ -11,7 +11,7 @@ import { formatEther, Address } from "viem";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { registerDataStruct, AvatarProps } from "@/src/lib/types";
+import { AvatarProps, Metadata, Signature } from "@/src/lib/types";
 import publicNFTABI from "@/contracts/publicNFT.json";
 import faucetTokenABI from "@/contracts/faucetToken.json";
 import rentmarketABI from "@/contracts/rentMarket.json";
@@ -36,7 +36,7 @@ export default function AvatarComponent(props: AvatarProps) {
     process.env.NEXT_PUBLIC_RENT_MARKET_CONTRACT_ADDRESS;
   const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS;
   const SERVICE_OWNER_ADDRESS = process.env.NEXT_PUBLIC_SERVICE_OWNER_ADDRESS;
-  const [metadata, setMetadata] = React.useState();
+  const [metadata, setMetadata] = React.useState<Metadata>();
 
   const { address, connector, isConnected } = useAccount();
   const { chains, chain } = useNetwork();
@@ -202,13 +202,6 @@ export default function AvatarComponent(props: AvatarProps) {
               address: props.registerData?.feeTokenAddress as Address,
               abi: faucetTokenABI.abi,
             });
-
-            interface Signature {
-              r: string;
-              s: string;
-              v: number;
-              deadline: number;
-            }
 
             const { r, s, v, deadline }: Signature = await erc20PermitSignature(
               {

@@ -1,5 +1,21 @@
 import React from "react";
 
+export interface Signature {
+  r: string;
+  s: string;
+  v: number;
+  deadline: number;
+}
+
+export interface Metadata {
+  description: string;
+  image: string;
+  name: string;
+  glb_url: string;
+  vrm_url: string;
+  symbol: string;
+}
+
 export interface ChildrenProps {
   children: React.ReactNode;
 }
