@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-// import * as webllm from "@mlc-ai/web-llm";
-import * as webllm from "@thothy/web-llm";
+import * as webllm from "@mlc-ai/web-llm";
+// import * as webllm from "@thothy/web-llm";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";

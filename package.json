@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@loadable/component": "^5.15.3",
+    "@mlc-ai/web-llm": "^0.2.15",
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.19",
     "@pixiv/three-vrm": "^2.0.7",
