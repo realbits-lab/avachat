@@ -222,59 +222,6 @@ export default function ChatHome() {
           setTalkFuncRef={setTalkFuncRef}
           serviceMode={AVACHAT_MODE}
         />
-        {/* <div className="overflow-hidden w-[20vw]">
-          <Image
-            src="/img/avatar_full.png"
-            width={315}
-            height={855}
-            alt="Avatar 123"
-            className=""
-          />
-        </div>
-        <div className="flex flex-col flex-grow">
-          <div className="flex-grow relative overflow-y-scroll overflow-x-hidden">
-            <div className="absolute inset-0 pr-2">
-              {chatHist.map((chat, i) => (
-                <div className="hst" key={i}>
-                  {chat.me ? (
-                    <MyBubble chat={chat} />
-                  ) : (
-                    <OtherBubble
-                      key={`o${i}`}
-                      chat={chat}
-                      onFinish={() => {
-                        dispatch({ cmd: ChatReduces.AiTypeDone, id: chat.id });
-                        scrollBottom();
-                        setIsBlocked(false);
-                      }}
-                    />
-                  )}
-                </div>
-              ))}
-              <div ref={refBottom} className="h-16" />
-            </div>
-          </div>
-          <div className="input-area p-2 flex gap-2">
-            <input
-              type="text"
-              id="chatInput"
-              className="flex-grow border rounded-md text-xl p-1"
-              placeholder="메세지 입력"
-              value={inputMsg}
-              onChange={(e) => setInputMsg(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  onSendMsg();
-                }
-              }}
-            />
-            <button className="" disabled={isBlocked} onClick={onSendMsg}>
-              <SendMsg />
-            </button>
-          </div>
-        </div>
-        */}
       </div>
     </div>
   );
