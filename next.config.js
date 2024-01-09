@@ -25,6 +25,14 @@ const nextConfig = {
       test: /\.svg$/i,
       use: ["@svgr/webpack"],
     });
+
+    config.resolve.fallback = {
+      ...config.resolve.fallback, // if you miss it, all the other options in fallback, specified
+      perf_hooks: false,
+    };
+
+    config.optimization.minimize = false;
+
     return config;
   },
 };
