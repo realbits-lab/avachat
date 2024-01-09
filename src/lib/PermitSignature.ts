@@ -15,7 +15,7 @@ export async function erc20PermitSignature({
   contract: any;
   chainId: number | undefined;
   address: string | undefined;
-}): Promise<Signature | undefined> {
+}): Promise<Signature> {
   console.log("call erc20PermitSignature()");
   console.log("owner: ", owner);
   console.log("spender: ", spender);
@@ -24,9 +24,10 @@ export async function erc20PermitSignature({
   console.log("chainId: ", chainId);
   console.log("address: ", address);
 
+  const transactionDeadline = Date.now() + 20 * 60;
+  let r, s, v;
   try {
     //* Deadline is 20 minutes later from current timestamp.
-    const transactionDeadline = Date.now() + 20 * 60;
     console.log("transactionDeadline: ", transactionDeadline);
     const nonce = await contract.read.nonces({ args: [owner] });
     console.log("nonce: ", nonce);
@@ -85,16 +86,18 @@ export async function erc20PermitSignature({
     const signData = utils.splitSignature(signature);
     console.log("signData: ", signData);
 
-    const { r, s, v } = signData;
-    return {
-      r,
-      s,
-      v,
-      deadline: transactionDeadline,
-    };
+    r = signData.r;
+    s = signData.s;
+    v = signData.v;
   } catch (error) {
     console.error("error: ", error);
+    throw error;
   }
 
-  return undefined;
+  return {
+    r,
+    s,
+    v,
+    deadline: transactionDeadline,
+  };
 }

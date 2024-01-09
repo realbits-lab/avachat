@@ -11,8 +11,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 
 export default function WalletConnect() {
-  const [openConnectorsDialog, setOpenConnectorsDialog] = useState(false);
-  const [isWalletNetworkConnect, setIsWalletNetworkConnect] = useState();
+  const [openConnectorsDialog, setOpenConnectorsDialog] =
+    useState<boolean>(false);
+  const [isWalletNetworkConnect, setIsWalletNetworkConnect] =
+    useState<boolean>(false);
   const { chains, chain } = useNetwork();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();

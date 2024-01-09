@@ -202,16 +202,15 @@ export default function AvatarComponent(props: AvatarProps) {
               abi: faucetTokenABI.abi,
             });
 
-            const { r, s, v, deadline }: Signature = await erc20PermitSignature(
-              {
+            const { r, s, v, deadline }: Signature =
+              await erc20PermitSignature({
                 owner: address,
                 spender: RENT_MARKET_CONTRACT_ADDRESS,
                 amount: props.registerData?.rentFeeByToken,
                 contract: contract,
                 chainId: chain?.id,
                 address: address,
-              }
-            );
+              });
 
             writeRentNftByToken?.({
               args: [

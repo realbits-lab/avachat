@@ -1,10 +1,10 @@
 import React from "react";
 
 export interface Signature {
-  r: string | undefined;
-  s: string | undefined;
-  v: number | undefined;
-  deadline: number | undefined;
+  r?: string;
+  s?: string;
+  v?: number;
+  deadline?: number;
 }
 
 export interface Metadata {
