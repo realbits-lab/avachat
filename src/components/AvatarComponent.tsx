@@ -170,10 +170,7 @@ export default function AvatarComponent(props: AvatarProps) {
         <Button
           color="primary"
           variant="outlined"
-          disabled={
-            props.registerData?.rentFee === 0 &&
-            props.registerData?.rentFeeByToken === 0
-          }
+          disabled={rentFee === 0 && rentFeeByToken === 0}
           onClick={async () => {
             writeRentNFT?.({
               args: [
@@ -202,15 +199,16 @@ export default function AvatarComponent(props: AvatarProps) {
               abi: faucetTokenABI.abi,
             });
 
-            const { r, s, v, deadline }: Signature =
-              await erc20PermitSignature({
+            const { r, s, v, deadline }: Signature = await erc20PermitSignature(
+              {
                 owner: address,
                 spender: RENT_MARKET_CONTRACT_ADDRESS,
                 amount: props.registerData?.rentFeeByToken,
                 contract: contract,
                 chainId: chain?.id,
                 address: address,
-              });
+              }
+            );
 
             writeRentNftByToken?.({
               args: [

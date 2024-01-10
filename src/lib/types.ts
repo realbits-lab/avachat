@@ -47,4 +47,6 @@ export interface rentDataStruct {
 
 export interface AvatarProps {
   registerData?: registerDataStruct;
+  key?: number;
+  hidePriceButton?: boolean;
 }
