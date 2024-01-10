@@ -100,6 +100,7 @@ export default function ChatHome() {
         (data: registerDataStruct) =>
           data.nftAddress.toLowerCase() === NFT_CONTRACT_ADDRESS?.toLowerCase()
       );
+      console.log("filteredJsonObject: ", filteredJsonObject);
       setRegisterDataArray(filteredJsonObject);
 
       const filteredFreeJsonObject = jsonObject.filter(
@@ -109,6 +110,7 @@ export default function ChatHome() {
           data.rentFee === 0 &&
           data.rentFeeByToken === 0
       );
+      console.log("filteredFreeJsonObject: ", filteredFreeJsonObject);
       setFreeRegisterDataArray(filteredFreeJsonObject);
 
       const filteredNonFreeJsonObject = jsonObject.filter(
