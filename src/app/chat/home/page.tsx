@@ -138,7 +138,11 @@ export default function ChatHome() {
 
       <div className="flex gap-6 flex-wrap">
         {rentDataArray?.map((registerData: rentDataStruct, idx: number) => (
-          <AvatarComponent registerData={registerData} key={idx} />
+          <AvatarComponent
+            registerData={registerData}
+            key={idx}
+            hidePriceButton={true}
+          />
         ))}
       </div>
 
