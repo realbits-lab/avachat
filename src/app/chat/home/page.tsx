@@ -1,14 +1,11 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { useContractRead, useAccount } from "wagmi";
 import { Address } from "viem";
 
 import rentmarketABI from "@/contracts/rentMarket.json";
 import { registerDataStruct, rentDataStruct } from "@/src/lib/types";
-import BigPlus from "~/assets/svg/BigPlus.svg";
 import AvatarComponent from "@/src/components/AvatarComponent";
 
 export default function ChatHome() {
